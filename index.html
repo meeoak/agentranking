@@ -2,9 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>LED 전광판</title>
+  <title>Papan LED</title>
   <style>
-    /* 기존 스타일 유지 */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -13,7 +12,7 @@
       color: #fff;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1600px;
       margin: 0 auto;
       background: #111;
       padding: 20px;
@@ -23,21 +22,47 @@
       overflow: hidden;
     }
 
-    /* 스크롤 컨테이너 */
+    /* 열 너비 동일하게 설정 */
+    th:nth-child(1), td:nth-child(1) { width: 25%; }
+    th:nth-child(2), td:nth-child(2) { width: 25%; }
+    th:nth-child(3), td:nth-child(3) { width: 25%; }
+    th:nth-child(4), td:nth-child(4) { width: 25%; }
+
+    .main-header {
+      background: #000;
+      padding: 8px 0;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #0ff;
+    }
+
+    .main-header th {
+      color: #0ff;
+      font-size: 28px;
+      font-weight: 900; /* 헤더 폰트 굵게 */
+      text-shadow: 0 0 15px #0ff;
+      background: none;
+      padding: 10px;
+    }
+
+    /* 데이터 영역 */
+    .data-section {
+      margin-top: 20px;
+    }
+
+    /* 스크롤 영역 */
     .scroll-container {
-      height: 600px;
+      height: 400px;
       overflow: hidden;
       position: relative;
     }
 
-    #rankTable {
-      width: 100%;
+    .data-container {
       position: relative;
+      overflow: hidden;
     }
 
-    /* 스크롤 애니메이션을 위한 wrapper - 속도 조절 */
     .scroll-wrapper {
-      animation: scrollUp 40s linear infinite; /* 40초로 변경 */
+      animation: scrollUp 60s linear infinite;
       position: relative;
     }
 
@@ -46,249 +71,167 @@
     }
 
     @keyframes scrollUp {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(-50%);
-      }
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
     }
 
     table {
-      width: 100%;
       border-collapse: separate;
-      border-spacing: 0 8px;
+      border-spacing: 0 12px;
       background-color: #000;
       border-radius: 10px;
-    }
-
-    /* 나머지 스타일은 동일하게 유지 */
-    th {
-      background-color: #222;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      color: #0ff;
-      text-shadow: 0 0 10px #0ff;
-      position: sticky;
-      top: 0;
-      z-index: 1;
+      width: 100%;
+      table-layout: fixed;
     }
 
     td {
-      padding: 15px;
+      padding: 20px 10px;
       text-align: center;
-      font-size: 16px;
-      background: #111;
-    }
-
-    .led-text {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 20px currentColor;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 24px;
+      color: #fff;
+      text-shadow: 0 0 5px #fff;
     }
 
     /* 순위별 스타일 */
-    .rank-1 .name-column { 
-      font-size: 38px !important; 
-      color: #ff0;
-      text-shadow: 0 0 10px #ff0, 0 0 20px #ff0, 0 0 30px #ff0;
-      animation: ledPulse1 1.5s infinite;
-    }
-    .rank-2 .name-column { 
-      font-size: 34px !important; 
-      color: #0ff;
-      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-      animation: ledPulse2 1.8s infinite;
-    }
-    .rank-3 .name-column { 
-      font-size: 30px !important; 
-      color: #f0f;
-      text-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
-      animation: ledPulse3 2s infinite;
-    }
-    .rank-4 .name-column { 
-      font-size: 28px !important; 
-      color: #0f0;
-      text-shadow: 0 0 10px #0f0;
-      animation: ledPulse4 2.2s infinite;
-    }
-    .rank-5 .name-column { 
-      font-size: 26px !important; 
-      color: #f00;
-      text-shadow: 0 0 10px #f00;
-      animation: ledPulse5 2.5s infinite;
+    .rank-1 td { 
+      font-size: 36px !important;
+      color: #ff00ff !important; /* 핑크색 형광으로 변경 */
+      text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+      background: rgba(255, 0, 255, 0.1);
     }
 
-    /* LED 애니메이션 */
-    @keyframes ledPulse1 {
-      0%, 100% { opacity: 1; text-shadow: 0 0 10px #ff0, 0 0 20px #ff0, 0 0 30px #ff0; }
-      50% { opacity: 0.8; text-shadow: 0 0 15px #ff0, 0 0 25px #ff0, 0 0 35px #ff0; }
-    }
-    @keyframes ledPulse2 {
-      0%, 100% { opacity: 1; text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
-      50% { opacity: 0.8; text-shadow: 0 0 15px #0ff, 0 0 25px #0ff; }
-    }
-    @keyframes ledPulse3 {
-      0%, 100% { opacity: 1; text-shadow: 0 0 10px #f0f, 0 0 20px #f0f; }
-      50% { opacity: 0.8; text-shadow: 0 0 15px #f0f, 0 0 25px #f0f; }
-    }
-    @keyframes ledPulse4 {
-      0%, 100% { opacity: 1; text-shadow: 0 0 10px #0f0; }
-      50% { opacity: 0.8; text-shadow: 0 0 15px #0f0; }
-    }
-    @keyframes ledPulse5 {
-      0%, 100% { opacity: 1; text-shadow: 0 0 10px #f00; }
-      50% { opacity: 0.8; text-shadow: 0 0 15px #f00; }
+    /* 2-4등 형광색 스타일 */
+    .rank-2 td, .rank-3 td, .rank-4 td { 
+      font-size: 32px !important;
+      color: #00ff00 !important;
+      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+      background: rgba(0, 255, 0, 0.1);
     }
 
-    .rank-emoji {
-      font-size: 24px;
-      margin-left: 8px;
-      text-shadow: none;
-      animation: emojiFloat 2s ease-in-out infinite;
+    .rank-5 td { 
+      font-size: 28px !important;
+      color: #ff69b4 !important;
+      text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
+      background: rgba(255, 105, 180, 0.1);
     }
 
-    @keyframes emojiFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-
-    #lastUpdate {
+    .loading {
       color: #666;
-      text-align: right;
-      margin-top: 20px;
-      font-size: 14px;
-      text-shadow: 0 0 5px #666;
-    }
-
-    /* 부드러운 스크롤을 위한 추가 스타일 */
-    .scroll-wrapper {
-      transition: transform 0.5s ease-out;
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="scroll-container">
-      <div class="scroll-wrapper">
-        <table id="rankTable">
-          <thead id="tableHeader">
-          </thead>
-          <tbody id="rankDisplays">
-            <tr>
-              <td class="loading">데이터를 불러오는 중...</td>
-            </tr>
-          </tbody>
-        </table>
-        <!-- 복제된 테이블 (순환 효과를 위해) -->
-        <table id="rankTableClone">
-        </table>
+    <!-- 메인 헤더 -->
+    <div class="main-header">
+      <table>
+        <tr>
+          <th>RANK</th>
+          <th>Tim</th>
+          <th>Nama</th>
+          <th>Jumlahnya</th>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 데이터 섹션 -->
+    <div class="data-section">
+      <!-- 상위 5등 -->
+      <table id="topRanks">
+        <tbody id="topRanksBody">
+          <!-- 상위 5등 데이터 -->
+        </tbody>
+      </table>
+
+      <!-- 6등 이후 스크롤 -->
+      <div class="scroll-container">
+        <div class="data-container">
+          <div class="scroll-wrapper">
+            <table id="rankTable">
+              <tbody id="rankDisplays">
+                <tr>
+                  <td class="loading" colspan="4">Memuat data...</td>
+                </tr>
+              </tbody>
+            </table>
+            <table id="rankTableClone">
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="lastUpdate"></div>
   </div>
 
   <script>
     const SHEET_URL = 'https://script.google.com/macros/s/AKfycbziiiibisHWj9M0f_jAxuxMbNsGIBOOFUNHBaAg2g46wryERUfO2sbeKvfGs3kL3XHsdA/exec';
-
+    const DISPLAY_COLUMNS = [2, 3, 4, 5];
     const rankEmojis = {
-      1: '👑 🏆 🥇',
-      2: '🥈 ⭐ ✨',
-      3: '🥉 🌟 ⚡',
-      4: '💫 🌠 💪',
-      5: '✨ 🎯 🔥'
+      1: '👑 🏆',
+      2: '🥈',
+      3: '🥉',
+      4: '✨',
+      5: '🔥 ⚡'
     };
 
-    function createHeaderRow(headerData) {
-      const headerRow = document.createElement('tr');
-      headerData.forEach((header, index) => {
-        if (index !== 1) {
-          const th = document.createElement('th');
-          th.textContent = header;
-          th.className = 'led-text';
-          headerRow.appendChild(th);
+    function createDataRow(rowData) {
+      const tr = document.createElement('tr');
+      const rank = parseInt(rowData[2]) || 0;
+      tr.className = rank <= 5 ? `rank-${rank}` : '';
+      
+      DISPLAY_COLUMNS.forEach((index, colIndex) => {
+        const td = document.createElement('td');
+        let content = rowData[index] || '';
+        
+        if (colIndex === 0 && rankEmojis[rank]) {
+          content += ` ${rankEmojis[rank]}`;
         }
+        
+        td.innerHTML = content;
+        tr.appendChild(td);
       });
-      return headerRow;
-    }
-
-    function createDataRows(data) {
-      return data.map(rowData => {
-        const rank = parseInt(rowData[2]);
-        const team = rowData[1];
-        
-        const tr = document.createElement('tr');
-        tr.className = `team-${team}${rank <= 10 ? ` rank-${rank}` : ''}`;
-        
-        rowData.forEach((cellData, index) => {
-          if (index !== 1) {
-            const td = document.createElement('td');
-            if (index === 2) {
-              const rankNumber = parseInt(cellData);
-              td.innerHTML = cellData + (rankEmojis[rankNumber] ? 
-                `<span class="rank-emoji">${rankEmojis[rankNumber]}</span>` : '');
-              td.className = 'rank-column led-text';
-            } else if (index === 0) {
-              td.textContent = cellData || '';
-              td.className = 'name-column led-text';
-            } else {
-              td.textContent = cellData || '';
-              td.className = 'led-text';
-            }
-            tr.appendChild(td);
-          }
-        });
-        
-        return tr;
-      });
+      
+      return tr;
     }
 
     async function updateData() {
-      try {
+      try {                                                                  
         const response = await fetch(SHEET_URL);
         const data = await response.json();
         
         if (data && data.data && data.data.length > 0) {
-          const headerData = data.data[0];
-          const tableData = data.data.slice(1);
-          
-          // 원본 테이블 업데이트
-          const tableHeader = document.getElementById('tableHeader');
-          tableHeader.innerHTML = '';
-          tableHeader.appendChild(createHeaderRow(headerData));
-          
+          const tableData = data.data.slice(2);
+
+          // 상위 5등 표시
+          const topRanksBody = document.getElementById('topRanksBody');
+          topRanksBody.innerHTML = '';
+          tableData.slice(0, 5).forEach(rowData => {
+            topRanksBody.appendChild(createDataRow(rowData));
+          });                                                                  
+
+          // 6등 이후 순환 표시
           const rankDisplays = document.getElementById('rankDisplays');
           rankDisplays.innerHTML = '';
-          createDataRows(tableData).forEach(row => rankDisplays.appendChild(row));
+          tableData.slice(5).forEach(rowData => {
+            rankDisplays.appendChild(createDataRow(rowData));
+          });                                                                  
 
-          // 복제 테이블 업데이트
           const rankTableClone = document.getElementById('rankTableClone');
-          rankTableClone.innerHTML = '';
-          const cloneHeader = createHeaderRow(headerData);
-          rankTableClone.appendChild(cloneHeader);
-          const cloneBody = document.createElement('tbody');
-          createDataRows(tableData).forEach(row => cloneBody.appendChild(row.cloneNode(true)));
-          rankTableClone.appendChild(cloneBody);
-          
-          const now = new Date();
-          document.getElementById('lastUpdate').textContent = 
-            `마지막 업데이트: ${now.toLocaleString()}`;
-
-          // 스크롤 애니메이션 재시작
-          const wrapper = document.querySelector('.scroll-wrapper');
-          wrapper.style.animation = 'none';
-          wrapper.offsetHeight; // 리플로우 강제
-          wrapper.style.animation = 'scrollUp 40s linear infinite'; // 40초로 변경
+          rankTableClone.innerHTML = rankDisplays.innerHTML;
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
-        document.getElementById('rankDisplays').innerHTML = 
-          '<tr><td class="loading">데이터를 불러오는데 실패했습니다.</td></tr>';
+        console.error('데이터 업데이트 중 오류 발생:', error);
       }
     }
 
-    updateData();
-    setInterval(updateData, 30000);
-  </script>
-</body>
-</html>
+    // 초기 데이터 로드 및 주기적 업데이트
+    updateData();                                                                  
+    setInterval(updateData, 30000); // 30초마다 업데이트
+  </script>                                                                      
+</body>                                  
+</html>                                  
